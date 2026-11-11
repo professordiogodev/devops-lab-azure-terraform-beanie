@@ -91,6 +91,15 @@ curl http://<public ip>:8000/api/menu      # cloud-init needs 3 to 6 minutes
 
 **VM size.** The default `Standard_D2s_v3` works in most subscriptions. `Standard_B1ms` is cheaper but restricted in some. If your apply fails with `SkuNotAvailable` that is not a mistake in your code: it is a fact about your subscription, and it is why the size is a variable. Change it in `terraform.tfvars`, not in `main.tf`.
 
+> **Quota and capacity are normal in Azure. Do not be afraid of them.** Azure shares real hardware between millions of customers, and when a region is in demand a new subscription can get `QuotaExceeded` ("approved cores quota") or `SkuNotAvailable` ("Capacity Restrictions") for some VM sizes. Professionals meet this every month, and nobody judges you for it. What to do, in this order:
+>
+> 1. **Read which one it is.** `QuotaExceeded` means your *subscription limit* for that VM family is too low (often 0 on a new subscription). `SkuNotAvailable` means Azure has no capacity of that size in that region for you right now.
+> 2. **See your numbers:** `az vm list-usage -l <region> -o table` (current value and limit per family).
+> 3. **Ask for more quota, it is a normal request:** Azure portal > **Quotas** > **Compute** > pick the region and the VM family > **Request adjustment** (a few cores, for example 4 or 10, is usually approved in minutes, automatically). If the portal says it cannot, open a support request of type *Service and subscription limits (quotas)*.
+> 4. **While you wait, use something else:** a different size of the same class (for example `Standard_D2s_v3` instead of a B-series), or a different region (`az vm list-skus -l <region> --resource-type virtualMachines --query "[?length(restrictions)==\`0\`].name" -o tsv`). Put the size and the region in variables so changing them costs one line.
+> 5. **Write down what you did** in your submission: which error, which request, how long it took. That is real work, not a detour.
+
+
 <p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## Part 3 - Drift
