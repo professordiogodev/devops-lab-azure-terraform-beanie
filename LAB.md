@@ -2,9 +2,17 @@
 
 ## The situation
 
-In the first Azure lab you built Beanie's server with about fifteen `az` commands. They worked. They were also typed once, in one terminal, and never saved. This week a colleague cleaning up the subscription deleted the resource group, and the client asked: "how long to bring it back?" The honest answer was "half a day, and we will not be sure it is identical".
+```text
+CLIENT CALL - transcript
+Client : "Someone cleaning the subscription deleted the resource group.
+          How long to bring Beanie back?"
+You    : "Half a day. And we will not be sure it is identical."
+Client : "..."
+```
 
-You will write the environment as **Terraform** with the `azurerm` provider, so that it can be created, destroyed and created again **identically** with one command. The VM's first-boot script (`cloud-init.yaml`) is provided complete: it is the one from the first Azure lab. The new part is describing the resource group, the network, the firewall, the public IP and the VM, and learning what Terraform tells you when reality and code disagree.
+In the first Azure lab you built the server with about fifteen `az` commands. They worked, and they were typed once in one terminal and never saved. That answer is not good enough twice.
+
+You will write the environment as **Terraform** with the `azurerm` provider, so it can be created, destroyed and created again **identically** with one command. The VM's first-boot script (`cloud-init.yaml`) is provided complete: it is the one from the first Azure lab. The new part is the resource group, the network, the firewall, the public IP and the VM, and what Terraform tells you when reality and code disagree.
 
 > **Your mission**
 > - Write `terraform/main.tf`: provider, resource group, network, NSG with the two rules, public IP, NIC and VM
